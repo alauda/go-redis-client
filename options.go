@@ -109,7 +109,6 @@ func (o Options) GetNormalConfig() *redis.Options {
 		PoolTimeout:        o.PoolTimeout,
 		IdleTimeout:        o.IdleTimeout,
 		IdleCheckFrequency: o.IdleCheckFrequency,
-		ReadOnly:           o.ReadOnly,
 		TLSConfig:          o.TLSConfig,
 	}
 	return opts
