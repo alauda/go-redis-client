@@ -1,6 +1,8 @@
 package redisClient
 
 import (
+	"errors"
+	"net"
 	"time"
 
 	redis "gopkg.in/redis.v5"
@@ -17,6 +19,24 @@ type CircuitBreaker struct {
 	isBackoff    bool
 	retries      int
 	backoffStart time.Time
+	next         Client
+
+	// functions
+	incrFunc KeyIntFunc
+	decrFunc KeyIntFunc
+}
+
+// NewCircuitBraker constructor for CircuitBreaker
+func NewCircuitBraker(next Client, backoff time.Duration, maxRetries int) *CircuitBreaker {
+	cb := &CircuitBreaker{
+		next:       next,
+		Backoff:    backoff,
+		MaxRetries: maxRetries,
+	}
+	cb.incrFunc = cb.KeyIntFunc(next.Incr)
+	cb.decrFunc = cb.KeyIntFunc(next.Decr)
+
+	return cb
 }
 
 func (c *CircuitBreaker) handleError(err error) error {
@@ -26,10 +46,13 @@ func (c *CircuitBreaker) handleError(err error) error {
 		}
 		return nil
 	}
-	c.retries++
-	if c.retries > c.MaxRetries {
-		c.isBackoff = true
-		c.backoffStart = time.Now()
+	// limit scope to only some error types
+	if IsNetworkError(err) {
+		c.retries++
+		if c.retries > c.MaxRetries {
+			c.isBackoff = true
+			c.backoffStart = time.Now()
+		}
 	}
 	return err
 }
@@ -52,14 +75,32 @@ func (c *CircuitBreaker) reset() {
 	c.backoffStart = time.Time{}
 }
 
-// KeyIncrFunc key function definition
-type KeyIncrFunc func(key string) *redis.IntCmd
+// IsNetworkError returns true if it is a network error
+func IsNetworkError(err error) bool {
+	_, ok := err.(net.Error)
+	return ok
+}
 
-func (c *CircuitBreaker) KeyFunc(f KeyIncrFunc) KeyIncrFunc {
+func (c *CircuitBreaker) Incr(key string) *redis.IntCmd {
+	return c.incrFunc(key)
+}
 
+func (c *CircuitBreaker) Decr(key string) *redis.IntCmd {
+	return c.decrFunc(key)
+}
+
+// ErrLocked standard locked error
+var ErrLocked = errors.New("redis is locked... will try again later")
+
+// KeyIntFunc key function definition
+// used in: Incr, Cecr
+type KeyIntFunc func(key string) *redis.IntCmd
+
+// KeyIntFunc decorates a function to use the circuit-breaker
+func (c *CircuitBreaker) KeyIntFunc(f KeyIntFunc) KeyIntFunc {
 	return func(key string) *redis.IntCmd {
 		if c.IsBackoff() {
-			return redis.NewIntCmd(key)
+			return redis.NewIntResult(-1, ErrLocked)
 		}
 		e := f(key)
 		c.handleError(e.Err())
@@ -67,6 +108,23 @@ func (c *CircuitBreaker) KeyFunc(f KeyIncrFunc) KeyIncrFunc {
 	}
 }
 
+// KeyValueIntFunc defines a function for the decorator
+// used in: IncrBy, DecrBy
+type KeyValueIntFunc func(key string, value int64) *redis.IntCmd
+
+// KeyValueIntFunc decorates a function to add circuit-breaker logic
+func (c *CircuitBreaker) KeyValueIntFunc(f KeyValueIntFunc) KeyValueIntFunc {
+	return func(key string, value int64) *redis.IntCmd {
+		if c.IsBackoff() {
+			return redis.NewIntResult(-1, ErrLocked)
+		}
+		e := f(key, value)
+		c.handleError(e.Err())
+		return e
+	}
+}
+
+// func (c *CircuitBreaker) Incr
 // type StringSliceFunc func(timeout time.Duration, keys ...string) *redis.StringSliceCmd
 // type CircularListFunc func(source, destination string, timeout time.Duration) *redis.StringCmd
 // type ExpireFunc func(key string, expiration time.Duration) *redis.BoolCmd

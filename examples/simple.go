@@ -1,10 +1,10 @@
 package examples
 
 import (
-	"fmt"
 	"time"
 
 	redis "github.com/alauda/go-redis-client"
+	red "gopkg.in/redis.v5"
 )
 
 func main() {
@@ -12,12 +12,24 @@ func main() {
 		Hosts: []string{"127.0.0.1:"},
 	})
 
-	circuit := redis.CircuitBreaker{
-		Backoff:    time.Second,
-		MaxRetries: 3,
-	}
+	circuit := redis.NewCircuitBraker(client.GetClient(), time.Second, 3)
 
-	e := circuit.KeyFunc(client.Incr)("test")
-	fmt.Println(e)
+	Haha(circuit)
 
+	a := circuit.Incr("test")
+	a.Err()
+
+	b := circuit.Decr("test")
+	b.Err()
+
+}
+
+func Haha(de Decreaser) {
+	de.Decr("a")
+	de.Incr("a")
+}
+
+type Decreaser interface {
+	Incr(string) *red.IntCmd
+	Decr(string) *red.IntCmd
 }
