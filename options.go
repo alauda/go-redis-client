@@ -4,11 +4,11 @@ import (
 	"crypto/tls"
 	"time"
 
-	redis "gopkg.in/redis.v5"
+	"github.com/go-redis/redis"
 )
 
-// RedisClientOptions options to initiate your client
-type RedisClientOptions struct {
+// Options options to initiate your client
+type Options struct {
 	Type ClientType
 	// Host address with port number
 	// For normal client will only used the first value
@@ -75,7 +75,7 @@ type RedisClientOptions struct {
 }
 
 // GetClusterConfig translates current configuration into a *redis.ClusterOptions
-func (o RedisClientOptions) GetClusterConfig() *redis.ClusterOptions {
+func (o Options) GetClusterConfig() *redis.ClusterOptions {
 	opts := &redis.ClusterOptions{
 		Addrs:              o.Hosts,
 		ReadOnly:           o.ReadOnly,
@@ -96,7 +96,7 @@ func (o RedisClientOptions) GetClusterConfig() *redis.ClusterOptions {
 }
 
 // GetNormalConfig translates current configuration into a *redis.Options struct
-func (o RedisClientOptions) GetNormalConfig() *redis.Options {
+func (o Options) GetNormalConfig() *redis.Options {
 	opts := &redis.Options{
 		Addr:               o.Hosts[0],
 		Password:           o.Password,

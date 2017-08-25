@@ -3,7 +3,7 @@ package redisClient
 import (
 	"time"
 
-	redis "gopkg.in/redis.v5"
+	"github.com/go-redis/redis"
 )
 
 // Pinger pinger interface for redis clients
@@ -35,8 +35,9 @@ type Expirer interface {
 	TTL(key string) *redis.DurationCmd
 }
 
+// Getter interface for getting key commands
 type Getter interface {
-	Exists(keys string) *redis.BoolCmd
+	Exists(keys ...string) *redis.IntCmd
 	Get(key string) *redis.StringCmd
 	GetBit(key string, offset int64) *redis.IntCmd
 	GetRange(key string, start, end int64) *redis.StringCmd
@@ -45,6 +46,7 @@ type Getter interface {
 	Dump(key string) *redis.StringCmd
 }
 
+// Setter interface for setting key commands
 type Setter interface {
 	Set(key string, value interface{}, expiration time.Duration) *redis.StatusCmd
 	Append(key, value string) *redis.IntCmd
@@ -64,7 +66,7 @@ type Hasher interface {
 	HKeys(key string) *redis.StringSliceCmd
 	HLen(key string) *redis.IntCmd
 	HMGet(key string, fields ...string) *redis.SliceCmd
-	HMSet(key string, fields map[string]string) *redis.StatusCmd
+	HMSet(key string, fields map[string]interface{}) *redis.StatusCmd
 	HSet(key, field string, value interface{}) *redis.BoolCmd
 	HSetNX(key, field string, value interface{}) *redis.BoolCmd
 	HVals(key string) *redis.StringSliceCmd
@@ -161,11 +163,11 @@ type Publisher interface {
 }
 
 type Subscriber interface {
-	Subscribe(channels ...string) (*redis.PubSub, error)
+	Subscribe(channels ...string) *redis.PubSub
 }
 
-// Client an interface containing all methods
-type Client interface {
+// Commander an interface containing all methods
+type Commander interface {
 	Pinger
 	Incrementer
 	Decremeter
@@ -179,4 +181,5 @@ type Client interface {
 	BlockedSettable
 	Scanner
 	Publisher
+	Subscriber
 }
