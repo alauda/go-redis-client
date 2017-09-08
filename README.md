@@ -64,6 +64,7 @@ func main() {
 - GetRange
 - GetSet
 - MGet
+- Dump
 - HExists
 - HGet
 - HGetAll

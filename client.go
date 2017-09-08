@@ -145,6 +145,11 @@ func (r *Client) MGet(keys ...string) *redis.SliceCmd {
 	return r.client.MGet(r.ks(keys...)...)
 }
 
+// Dump dump command
+func (r *Client) Dump(key string) *redis.StringCmd {
+	return r.client.Dump(r.k(key))
+}
+
 // -------------- Hasher
 
 func (r *Client) HExists(key, field string) *redis.BoolCmd {
