@@ -57,6 +57,7 @@ type Setter interface {
 	// MSetNX(pairs ...interface{}) *redis.BoolCmd
 }
 
+// Hasher interface for hashtable commands
 type Hasher interface {
 	HExists(key, field string) *redis.BoolCmd
 	HGet(key, field string) *redis.StringCmd
@@ -70,6 +71,7 @@ type Hasher interface {
 	HSet(key, field string, value interface{}) *redis.BoolCmd
 	HSetNX(key, field string, value interface{}) *redis.BoolCmd
 	HVals(key string) *redis.StringSliceCmd
+	HDel(key string, fields ...string) *redis.IntCmd
 }
 
 type Lister interface {

@@ -189,6 +189,9 @@ func (r *Client) HSetNX(key, field string, value interface{}) *redis.BoolCmd {
 func (r *Client) HVals(key string) *redis.StringSliceCmd {
 	return r.client.HVals(r.k(key))
 }
+func (r *Client) HDel(key string, fields ...string) *redis.IntCmd {
+	return r.client.HDel(r.k(key), fields...)
+}
 
 // -------------- Lister
 
