@@ -161,7 +161,7 @@ type BlockedSettable interface {
 }
 
 type Publisher interface {
-	Publish(channel, message string) *redis.IntCmd
+	Publish(channel string, message interface{}) *redis.IntCmd
 }
 
 type Subscriber interface {

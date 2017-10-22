@@ -439,7 +439,7 @@ func (r *Client) HScan(key string, cursor uint64, match string, count int64) *re
 
 // -------------- Publisher
 
-func (r *Client) Publish(channel, message string) *redis.IntCmd {
+func (r *Client) Publish(channel string, message interface{}) *redis.IntCmd {
 	return r.client.Publish(r.k(channel), message)
 }
 func (r *Client) Subscribe(channels ...string) *redis.PubSub {

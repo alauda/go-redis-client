@@ -3,40 +3,40 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "YL/oT/qZ4rc2JM182hmzRBSIL+8=",
+			"checksumSHA1": "mMARTLrZ/joomxQ+IBDZvKk5wHQ=",
 			"path": "github.com/go-redis/redis",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		},
 		{
-			"checksumSHA1": "x/1eSGi0dmQIUdAzjKlPVPr1ndw=",
+			"checksumSHA1": "4jC940+TfJgGSacgQ12q8pniQvk=",
 			"path": "github.com/go-redis/redis/internal",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		},
 		{
 			"checksumSHA1": "GQZsUVg/+6UpQAYpc4luMvMutSI=",
 			"path": "github.com/go-redis/redis/internal/consistenthash",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		},
 		{
 			"checksumSHA1": "VP0K8vvf716n6xuzAZTvpz+wTwc=",
 			"path": "github.com/go-redis/redis/internal/hashtag",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		},
 		{
-			"checksumSHA1": "GorDWvfUq/08t1GG6rfvs5LKDqk=",
+			"checksumSHA1": "AtcctlDri3zLh6U5sDnT4NULEtw=",
 			"path": "github.com/go-redis/redis/internal/pool",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		},
 		{
-			"checksumSHA1": "Ct2AS6Z9YmTAlKOMsBrhwvpXAPY=",
+			"checksumSHA1": "q/AJM6JX7KSt8rZNYX7pMYRjWyk=",
 			"path": "github.com/go-redis/redis/internal/proto",
-			"revision": "0daeac9c3e31a1b121318398249699f48bb8d2a4",
-			"revisionTime": "2017-08-21T07:19:13Z"
+			"revision": "35248155a505a84811be81a2aab1c423317447be",
+			"revisionTime": "2017-10-12T08:56:05Z"
 		}
 	],
 	"rootPath": "github.com/alauda/go-redis-client"
