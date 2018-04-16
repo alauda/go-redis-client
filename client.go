@@ -8,6 +8,9 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// RedisNil means nil reply, .e.g. when key does not exist.
+const RedisNil = redis.Nil
+
 // Client a struct representing the redis client
 type Client struct {
 	opts      Options
