@@ -123,3 +123,29 @@ const (
 	// ClientCluster for official redis cluster
 	ClientCluster ClientType = "cluster"
 )
+// Client Reader and Writer
+type RWType string
+
+const (
+	OnlyRead     RWType ="READER"
+	OnlyWrite    RWType ="WRITER"
+	ReadAndWrite RWType =""
+)
+
+// IsReadOnly will return Is it read-only
+func(rw *RWType) IsReadOnly() bool{
+
+	if *rw == OnlyRead {
+		return true
+	} else {
+		return false
+	}
+}
+
+// FmtSuffix get fmtstring of  key+ "_" + suffix
+func(rw *RWType) FmtSuffix(key string) string{
+	if *rw == ReadAndWrite{
+		return key
+	}
+	return key+"_"+string(*rw)
+}
