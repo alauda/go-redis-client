@@ -3,6 +3,7 @@ package redisClient_test
 import (
 	"fmt"
 	redis "github.com/alauda/go-redis-client"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -47,13 +48,6 @@ func TestAutoConfigRedisClient(t *testing.T) {
 	if err!=nil {
 		panic(err)
 	}
-	client.Set("aiyijing1",1,time.Duration(time.Second*1000))
-	client.Set("aiyijing2",1,time.Duration(time.Second*1000))
-	client.Set("aiyijing3",1,time.Duration(time.Second*1000))
-	res:=client.MGet("aiyijing1","aiyijing2","aiyijing3")
-	fmt.Printf("%v\n",res)
-	str,_:=client.MGetByPipeline("aiyijing1","aiyijing2","aiyijing3")
-	fmt.Printf("%v\n",str)
 	if err:=client.Ping().Err();err!=nil{
 		fmt.Printf(client.Ping().Name())
 		t.Error("AutoConfigRedisClient: Ping failed!")
@@ -61,4 +55,26 @@ func TestAutoConfigRedisClient(t *testing.T) {
 	}else {
 		t.Log("AutoConfigRedisClient: Ping Success!")
 	}
+}
+
+func TestMGetByPipeline(t *testing.T) {
+	r:= redis.OnlyRead
+	client,err:= redis.AutoConfigRedisClient(r)
+
+	if err!=nil {
+		panic(err)
+	}
+	client.Set("alauda1",1,time.Duration(time.Second*1000))
+	client.Set("alauda2",2,time.Duration(time.Second*1000))
+	client.Set("alauda3",3,time.Duration(time.Second*1000))
+
+	exp := []string{"1","2","3"}
+
+	res,_:=client.MGetByPipeline("alauda1","alauda2","alauda3")
+
+	fmt.Printf("%v\n",res)
+	if !reflect.DeepEqual(exp, res) {
+		t.Error("bad result:", res)
+	}
+
 }
