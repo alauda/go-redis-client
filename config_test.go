@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestAutoConfigRedisClientInVolume(t *testing.T) {
+func TestAutoConfigRedisClientFromVolume(t *testing.T) {
 	r:= redis.OnlyRead
 	client,err:= redis.AutoConfigRedisClientFromVolume(r)
 
@@ -24,7 +24,7 @@ func TestAutoConfigRedisClientInVolume(t *testing.T) {
 
 }
 
-func TestAutoConfigRedisClientInEnv(t *testing.T) {
+func TestAutoConfigRedisClientFromEnv(t *testing.T) {
 	r:= redis.OnlyRead
 
 	client,err:= redis.AutoConfigRedisClientFromEnv(r)
