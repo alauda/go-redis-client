@@ -7,11 +7,16 @@ import (
 )
 
 const (
-	DefaultDir      = "/etc/paas/"	// default config file search dir
-	DefaultFileName = "redis"		// default config file name
-	EnvPrefixKey    = "ENV_PREFIX"	// prefix of environment variable
-	ConfigDirKey    = "CONFIG_DIR"	// key to get file search path from environment variable
-	ConfigNameKey   = "CONFIG_NAME"	// key to get file name from environment variable
+	// default config file search dir
+	DefaultDir      = "/etc/paas/"
+	// default config file name
+	DefaultFileName = "redis"
+	// prefix of environment variable
+	EnvPrefixKey    = "ENV_PREFIX"
+	// key to get file search path from environment variable
+	ConfigDirKey    = "CONFIG_DIR"
+	// key to get file name from environment variable
+	ConfigNameKey   = "CONFIG_NAME"
 )
 
 //LoadParamsFromEnv will use env params to create viper.Viper
