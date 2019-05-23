@@ -36,7 +36,7 @@ func NewClient(opts Options) *Client {
 	r.fmtString = opts.KeyPrefix + "%s"
 	return r
 }
-// isCluster determine whether client is a cluster model
+// IsCluster determine whether client is a cluster model
 func (r *Client) IsCluster() bool{
 	if r.opts.Type==ClientCluster{
 		return true
