@@ -36,17 +36,20 @@ func NewClient(opts Options) *Client {
 	r.fmtString = opts.KeyPrefix + "%s"
 	return r
 }
+
 // IsCluster determine whether client is a cluster model
-func (r *Client) IsCluster() bool{
-	if r.opts.Type==ClientCluster{
+func (r *Client) IsCluster() bool {
+	if r.opts.Type == ClientCluster {
 		return true
 	}
 	return false
 }
+
 //Prefix return prefix+key
-func (r *Client) Prefix(key string) string{
+func (r *Client) Prefix(key string) string {
 	return fmt.Sprintf(r.fmtString, key)
 }
+
 // Formats and retuns the key with the prefix
 func (r *Client) k(key string) string {
 	return fmt.Sprintf(r.fmtString, key)
@@ -223,6 +226,7 @@ func (r *Client) MGetByPipeline(keys ...string) ([]string, error) {
 
 	return res, err
 }
+
 // MGet Multiple get command
 func (r *Client) MGet(keys ...string) *redis.SliceCmd {
 	return r.client.MGet(r.ks(keys...)...)
@@ -528,8 +532,9 @@ func (r *Client) Publish(channel string, message interface{}) *redis.IntCmd {
 func (r *Client) Subscribe(channels ...string) *redis.PubSub {
 	return r.client.Subscribe(r.ks(channels...)...)
 }
+
 // Pipeline get Pipeliner of r.client
-func (r *Client) Pipeline() redis.Pipeliner{
+func (r *Client) Pipeline() redis.Pipeliner {
 	return r.client.Pipeline()
 }
 
