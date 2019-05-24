@@ -127,8 +127,11 @@ const (
 type RWType string
 
 const (
+	// OnlyRead serves as a search suffix for configuration parameters
 	OnlyRead     RWType ="READER"
+	// OnlyWrite serves as a search suffix for configuration parameters
 	OnlyWrite    RWType ="WRITER"
+	// ReadAndWrite serves as a search suffix for configuration parameters
 	ReadAndWrite RWType =""
 )
 
