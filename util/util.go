@@ -7,15 +7,15 @@ import (
 )
 
 const (
-	// default config file search dir
+	// DefaultDir is default config file search dir
 	DefaultDir      = "/etc/paas/"
-	// default config file name
+	// DefaultFileName is default config file name
 	DefaultFileName = "redis"
-	// prefix of environment variable
+	// EnvPrefixKey is prefix of environment variable
 	EnvPrefixKey    = "ENV_PREFIX"
-	// key to get file search path from environment variable
+	// ConfigDirKey is key to get file search path from environment variable
 	ConfigDirKey    = "CONFIG_DIR"
-	// key to get file name from environment variable
+	// ConfigNameKey is key to get file name from environment variable
 	ConfigNameKey   = "CONFIG_NAME"
 )
 
@@ -24,7 +24,7 @@ func LoadParamsFromEnv() * viper.Viper{
 	v:=viper.New()
 	prefix := os.Getenv(EnvPrefixKey)
 	if prefix == "" {
-		logrus.Warnf("ENV_PREFIX not exsit in env ")
+		logrus.Warnf("ENV_PREFIX not exist in env ")
 	}
 	v.SetEnvPrefix(prefix)
 	v.AutomaticEnv()
@@ -40,7 +40,7 @@ func LoadParamsFromVolume()(* viper.Viper,error){
 	//Use default DIR
 	if configDir == ""{
 		configDir = DefaultDir
-		logrus.Warnf("ConfigDirKey Not exsit in env Use default dir %s", DefaultDir)
+		logrus.Warnf("ConfigDirKey Not exist in env Use default dir %s", DefaultDir)
 	}else {
 		logrus.Infof("Use Config_Dir: %s",configDir)
 	}
@@ -48,7 +48,7 @@ func LoadParamsFromVolume()(* viper.Viper,error){
 	////Use default config file name
 	if fileName == ""{
 		fileName = DefaultFileName
-		logrus.Warnf("ConfigNameKey not exsit in env Use default name %s", DefaultFileName)
+		logrus.Warnf("ConfigNameKey not exist in env Use default name %s", DefaultFileName)
 	}else {
 		logrus.Infof("Use CONFIG_NAME: %s",fileName)
 	}
