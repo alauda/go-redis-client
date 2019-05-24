@@ -128,7 +128,7 @@ spec:
           value: "/etc/pass/"       # default: /etc/pass/
         - name: CONFIG_NAME         # Configuration file name
           value: "redis"            # default: redis,no suffix
-        - name: ENV_PREFIX          # Environmental variable prefix
+        - name: ENV_PREFIX          # Environmental variable prefix,default: ""
           value: "ALAUDA"           # Prefix must be uppercase
         - name: ALAUDA_REDIS_TYPE_READER # Injected  redis variables must have ENV_PREFIX when ENV_PREFIX is not null
           value: "cluster"
