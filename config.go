@@ -98,7 +98,7 @@ func customizedOptionsFromEnv(rwType RWType)(*Options,error){
 }
 
 
-// customizedOptionsFromFullVariable Customized Options by  Voluem and Env
+// customizedOptionsFromFullVariable Customized Options by  Volume and Env
 func customizedOptionsFromFullVariable(rwType RWType) (*Options,error){
 
 	fromVolume, err := util.LoadParamsFromVolume()
