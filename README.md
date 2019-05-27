@@ -9,6 +9,7 @@ The main motivation is to have a simple client that is transparent to the applic
 - Unified options object when creating client instance
 - Uses github.com/go-redis/redis client internally: currently using gopkg.in/redis.v5
 - Client interface for usage
+- About usage in Container [README.en.md](/README.en.md)  or [README.zh.md](/README.zh.md)
 
 ### Example
 ```go
@@ -46,6 +47,8 @@ func main() {
 ```
 
 ### Supported commands
+
+- MGetByPipeline
 - Ping
 - Incr
 - IncrBy

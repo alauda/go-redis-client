@@ -3,6 +3,8 @@ package redisClient
 import (
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
+	"sync"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -33,6 +35,19 @@ func NewClient(opts Options) *Client {
 	}
 	r.fmtString = opts.KeyPrefix + "%s"
 	return r
+}
+
+// IsCluster determine whether client is a cluster model
+func (r *Client) IsCluster() bool {
+	if r.opts.Type == ClientCluster {
+		return true
+	}
+	return false
+}
+
+//Prefix return prefix+key
+func (r *Client) Prefix(key string) string {
+	return fmt.Sprintf(r.fmtString, key)
 }
 
 // Formats and retuns the key with the prefix
@@ -141,6 +156,75 @@ func (r *Client) GetRange(key string, start, end int64) *redis.StringCmd {
 // GetSet getset command
 func (r *Client) GetSet(key string, value interface{}) *redis.StringCmd {
 	return r.client.GetSet(r.k(key), value)
+}
+
+// MGetByPipeline gets multiple values from keys,Pipeline is used when
+// redis is a cluster,This means higher IO performance
+// params: keys ...string
+// return: []string, error
+func (r *Client) MGetByPipeline(keys ...string) ([]string, error) {
+
+	var res []string
+
+	if r.IsCluster() {
+		start := time.Now()
+		pipeLineLen := 100
+		pipeCount := len(keys)/pipeLineLen + 1
+		pipes := make([]redis.Pipeliner, pipeCount)
+		for i := 0; i < pipeCount; i++ {
+			pipes[i] = r.client.Pipeline()
+		}
+		for i, k := range keys {
+			p := pipes[i%pipeCount]
+			p.Get(r.k(k))
+		}
+		logrus.Debugf("process cost: %v", time.Since(start))
+		start = time.Now()
+		var wg sync.WaitGroup
+		var lock sync.Mutex
+		errors := make(chan error, pipeCount)
+		for _, p := range pipes {
+			p := p
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				cmders, err := p.Exec()
+				if err != nil {
+					select {
+					case errors <- err:
+					default:
+					}
+					return
+				}
+				lock.Lock()
+				defer lock.Unlock()
+				for _, cmder := range cmders {
+					result, _ := cmder.(*redis.StringCmd).Result()
+					res = append(res, result)
+				}
+			}()
+		}
+		wg.Wait()
+		logrus.Debugf("exec cost: %v", time.Since(start))
+
+		if len(errors) > 0 {
+			return nil, <-errors
+		}
+
+		return res, nil
+	}
+
+	vals, err := r.client.MGet(keys...).Result()
+
+	if redis.Nil != err && nil != err {
+		return nil, err
+	}
+
+	for _, item := range vals {
+		res = append(res, fmt.Sprintf("%s", item))
+	}
+
+	return res, err
 }
 
 // MGet Multiple get command
@@ -447,6 +531,11 @@ func (r *Client) Publish(channel string, message interface{}) *redis.IntCmd {
 }
 func (r *Client) Subscribe(channels ...string) *redis.PubSub {
 	return r.client.Subscribe(r.ks(channels...)...)
+}
+
+// Pipeline get Pipeliner of r.client
+func (r *Client) Pipeline() redis.Pipeliner {
+	return r.client.Pipeline()
 }
 
 // ErrNotImplemented not implemented error
