@@ -121,32 +121,26 @@ spec:
       ....
       volumeMounts:
         - name: redis-secret
-          mountPath: "/etc/pass"
+          mountPath: "/etc/pass" # it must be this value
           readOnly: true
       env:
-        - name: CONFIG_DIR          # Configuration file search directory
-          value: "/etc/pass/"       # default: /etc/pass/
-        - name: CONFIG_NAME         # Configuration file name
-          value: "redis"            # default: redis,no suffix
-        - name: ENV_PREFIX          # Environmental variable prefix,default: ""
-          value: "ALAUDA"           # Prefix must be uppercase
-        - name: ALAUDA_REDIS_TYPE_READER # Injected  redis variables must have ENV_PREFIX when ENV_PREFIX is not null
+        - name: REDIS_TYPE_READER # Injected  redis variables must have ENV_PREFIX when ENV_PREFIX is not null
           value: "cluster"
-        - name: ALAUDA_REDIS_HOST_READER
+        - name: REDIS_HOST_READER
           value: "1.1.1.1 1.1.1.2 1.1.1.3"
-        - name: ALAUDA_REDIS_PORT_READER
+        - name: REDIS_PORT_READER
           value: "26379 26379 26379"
-        - name: ALAUDA_REDIS_DB_NAME_READER
+        - name: REDIS_DB_NAME_READER
           value: '0'
-        - name: ALAUDA_REDIS_DB_PASSWORD_READER
+        - name: REDIS_DB_PASSWORD_READER
           value: "aiyijing"         # redis:passwd
-        - name: ALAUDA_REDIS_MAX_CONNECTIONS_READER
+        - name: REDIS_MAX_CONNECTIONS_READER
           value: "32"
-        - name: ALAUDA_REDIS_KEY_PREFIX_READER
+        - name: REDIS_KEY_PREFIX_READER
           value: "aiyijing_"
-        - name: ALAUDA_REDIS_SKIP_FULL_COVER_CHECK_READER
+        - name: REDIS_SKIP_FULL_COVER_CHECK_READER
           value: "false"
-        - name: ALAUDA_REDIS_TIMEOUT_READER
+        - name: REDIS_TIMEOUT_READER
           value: '5'
 ```
 
