@@ -121,7 +121,7 @@ spec:
       ....
       volumeMounts:
         - name: redis-secret
-          mountPath: "/etc/pass" # it must be this value
+          mountPath: "/etc/paas" # it must be this value
           readOnly: true
       env:
         - name: REDIS_TYPE_READER # Injected  redis variables must have ENV_PREFIX when ENV_PREFIX is not null
