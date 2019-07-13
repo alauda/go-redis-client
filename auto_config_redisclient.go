@@ -1,10 +1,13 @@
 package redisClient
 
+import "github.com/sirupsen/logrus"
+
 // AutoConfigRedisClient merges configuration files and environment
 // variables to create redisclient. parameter priority: environment
 // variables > configuration file
 func AutoConfigRedisClient(rwType RWType) (*Client, error) {
 	opts, err := customizedOptionsFromFullVariable(rwType)
+	logrus.Debugf("%v", opts)
 	if opts != nil {
 		return NewClient(*opts), err
 	}
@@ -15,6 +18,7 @@ func AutoConfigRedisClient(rwType RWType) (*Client, error) {
 // in the configuration file
 func AutoConfigRedisClientFromVolume(rwType RWType) (*Client, error) {
 	opts, err := customizedOptionsFromVolume(rwType)
+	logrus.Debugf("%v", opts)
 	if opts != nil {
 		return NewClient(*opts), err
 	}
@@ -25,6 +29,7 @@ func AutoConfigRedisClientFromVolume(rwType RWType) (*Client, error) {
 // variables parameters
 func AutoConfigRedisClientFromEnv(rwType RWType) (*Client, error) {
 	opts, err := customizedOptionsFromEnv(rwType)
+	logrus.Debugf("%v", opts)
 	if opts != nil {
 		return NewClient(*opts), err
 	}

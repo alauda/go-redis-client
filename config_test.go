@@ -2,10 +2,11 @@ package redisClient_test
 
 import (
 	"fmt"
-	redis "github.com/alauda/go-redis-client"
 	"reflect"
 	"testing"
 	"time"
+
+	redis "github.com/alauda/go-redis-client"
 )
 
 func TestAutoConfigRedisClientFromVolume(t *testing.T) {
@@ -16,7 +17,7 @@ func TestAutoConfigRedisClientFromVolume(t *testing.T) {
 		panic(err)
 	}
 	if err := client.Ping().Err(); err != nil {
-		fmt.Printf(client.Ping().Name())
+		fmt.Println(client.Ping().Name())
 		t.Error("AutoConfigRedisClientFromVolume: Ping failed!")
 		panic(err)
 	} else {
@@ -34,7 +35,7 @@ func TestAutoConfigRedisClientFromEnv(t *testing.T) {
 		panic(err)
 	}
 	if err := client.Ping().Err(); err != nil {
-		fmt.Printf(client.Ping().Name())
+		fmt.Println(client.Ping().Name())
 		t.Error("AutoConfigRedisClientFromEnv: Ping failed!")
 		panic(err)
 	} else {
@@ -49,7 +50,7 @@ func TestAutoConfigRedisClient(t *testing.T) {
 		panic(err)
 	}
 	if err := client.Ping().Err(); err != nil {
-		fmt.Printf(client.Ping().Name())
+		fmt.Println(client.Ping().Name())
 		t.Error("AutoConfigRedisClient: Ping failed!")
 		panic(err)
 	} else {
