@@ -127,7 +127,7 @@ spec:
         - name: REDIS_TYPE_READER # Injected  redis variables must have ENV_PREFIX when ENV_PREFIX is not null
           value: "cluster"
         - name: REDIS_HOST_READER
-          value: "1.1.1.1 1.1.1.2 1.1.1.3"
+          value: "1.1.1.1,1.1.1.2,1.1.1.3"
         - name: REDIS_PORT_READER
           value: "26379 26379 26379"
         - name: REDIS_DB_NAME_READER

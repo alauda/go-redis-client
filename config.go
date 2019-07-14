@@ -1,34 +1,13 @@
 package redisClient
 
 import (
+	"strings"
+	"time"
+
 	"github.com/alauda/go-redis-client/util"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"time"
 )
-
-// keys of config params from environment variable
-var configKey = []string{
-	"REDIS_TYPE",
-	"REDIS_HOST",
-	"REDIS_PORT",
-	"REDIS_DB_NAME",
-	"REDIS_DB_PASSWORD",
-	"REDIS_MAX_CONNECTIONS",
-	"REDIS_KEY_PREFIX",
-	"REDIS_SKIP_FULL_COVER_CHECK",
-	"REDIS_TIMEOUT",
-}
-
-// mergeViper will merge tow viper,viper env will cover viper vol
-func mergeViper(vol, env *viper.Viper, suffix RWType) {
-	for _, value := range configKey {
-		value = value + string(suffix)
-		if ee := env.Get(value); ee != nil {
-			vol.Set(value, env.Get(value))
-		}
-	}
-}
 
 //addrStructure will create ADDR,For example string: "host:port"
 func addrStructure(redisPort []string, redisHosts []string) []string {
@@ -61,6 +40,7 @@ func addrStructure(redisPort []string, redisHosts []string) []string {
 func customizedOption(viper *viper.Viper, rwType RWType) *Options {
 
 	var opt = Options{}
+	letOldEnvSupportViper(viper, rwType)
 	hosts := addrStructure(viper.GetStringSlice(rwType.FmtSuffix("REDIS_PORT")),
 		viper.GetStringSlice(rwType.FmtSuffix("REDIS_HOST")))
 	opt.Type = ClientType(viper.GetString(rwType.FmtSuffix("REDIS_TYPE")))
@@ -99,12 +79,27 @@ func customizedOptionsFromEnv(rwType RWType) (*Options, error) {
 
 // customizedOptionsFromFullVariable Customized Options by  Volume and Env
 func customizedOptionsFromFullVariable(rwType RWType) (*Options, error) {
-
-	fromVolume, err := util.LoadParamsFromVolume()
+	mixedViper, err := util.LoadMixedParams()
 	if err != nil {
 		return nil, err
 	}
-	fromEnv := util.LoadParamsFromEnv()
-	mergeViper(fromVolume, fromEnv, rwType)
-	return customizedOption(fromVolume, rwType), nil
+	return customizedOption(mixedViper, rwType), nil
+}
+
+// letOldEnvSupportViper is let old env support viper
+// because of old env contain comma
+func letOldEnvSupportViper(v *viper.Viper, rwType RWType) {
+	// let old env support viper's reader,
+	convertDataKey := []string{
+		"REDIS_HOST",
+		"REDIS_PORT",
+	}
+	for _, k := range convertDataKey {
+		res := v.GetString(rwType.FmtSuffix(k))
+		if strings.Contains(res, ",") {
+			vs := strings.Split(res, ",")
+			v.Set(rwType.FmtSuffix(k), vs)
+		}
+	}
+	// ....
 }

@@ -1,9 +1,10 @@
 package util
 
 import (
+	"os"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"os"
 )
 
 const (
@@ -61,5 +62,39 @@ func LoadParamsFromVolume() (*viper.Viper, error) {
 	v.SetConfigName(fileName)
 	v.AddConfigPath(configDir)
 
+	return v, v.ReadInConfig()
+}
+
+func LoadMixedParams() (*viper.Viper, error) {
+	v := viper.New()
+	configDir := os.Getenv(ConfigDirKey)
+	fileName := os.Getenv(ConfigNameKey)
+	prefix := os.Getenv(EnvPrefixKey)
+
+	if prefix == "" {
+		prefix = DefaultEnvPrefixKey
+		logrus.Warnf("ENV_PREFIX not exist in env Use default env prefix: %s", DefaultEnvPrefixKey)
+	} else {
+		logrus.Warnf("Use EnvPrefixKey: %s", prefix)
+	}
+
+	//Use default DIR
+	if configDir == "" {
+		configDir = DefaultDir
+		logrus.Warnf("ConfigDirKey not exist in env Use default dir %s", DefaultDir)
+	} else {
+		logrus.Infof("Use Config_Dir: %s", configDir)
+	}
+	//Use default config file name
+	if fileName == "" {
+		fileName = DefaultFileName
+		logrus.Warnf("ConfigNameKey not exist in env Use default name %s", DefaultFileName)
+	} else {
+		logrus.Infof("Use CONFIG_NAME: %s", fileName)
+	}
+	v.SetConfigName(fileName)
+	v.AddConfigPath(configDir)
+	v.SetEnvPrefix(prefix)
+	v.AutomaticEnv()
 	return v, v.ReadInConfig()
 }

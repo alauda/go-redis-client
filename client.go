@@ -3,9 +3,10 @@ package redisClient
 import (
 	"errors"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/go-redis/redis"
 )
@@ -39,10 +40,7 @@ func NewClient(opts Options) *Client {
 
 // IsCluster determine whether client is a cluster model
 func (r *Client) IsCluster() bool {
-	if r.opts.Type == ClientCluster {
-		return true
-	}
-	return false
+	return r.opts.Type == ClientCluster
 }
 
 //Prefix return prefix+key
